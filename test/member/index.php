@@ -10,12 +10,12 @@ header("Content-Type:text/html;charset=utf-8");
 	if(empty($mode)) {
 		$mode = 'step1';
 	}
-
+// 선택박스 확인 
 		if($checker1=='on' && $checker2=='on'){}
 		else{
 			$mode = 'step1';
 		}
-	
+
 
 	
 ?>
@@ -23,6 +23,7 @@ header("Content-Type:text/html;charset=utf-8");
 
 <?php
 	include "../header.php";
+	include "../db.php";
 ?>
 
 <?php
@@ -32,7 +33,7 @@ header("Content-Type:text/html;charset=utf-8");
 
 <?php
 	include "../footer.php";
-		$checker1 = 'off';
+	$checker1 = 'off';
 	$checker2 = 'off';
 ?>
 
