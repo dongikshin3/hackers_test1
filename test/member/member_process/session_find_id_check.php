@@ -17,13 +17,7 @@
 <?php
 		}else{
 			$conn= new mysqli('192.168.56.101','root','localhost','test');
-				mysqli_query($conn, "set session character_set_connection=utf8;");
-				mysqli_query($conn, "set session character_set_results=utf8;");
-				mysqli_query($conn, "set session character_set_client=utf8;");
-
-			if ($conn->connect_error) {
-				die($conn->connect_error);
-			}
+			include "../../db/db.php";
 
 			$query_name = "select count(*) AS cnt from personal_info where name='$name'";
 			$result=mysqli_query($conn,$query_name);
@@ -33,14 +27,12 @@
 			$result_name = mysqli_query($conn,$query_name);
 			$row_name = mysqli_fetch_array($result_name);
 
-			$query_id = "select id from personal_info where name ='$name'";
+			$query_id = "select id from personal_info where name ='$name' and mobile1='$mobile1' and mobile2='$mobile2' and mobile3='$mobile3'";
 			$result_id = mysqli_query($conn,$query_id);
 			$row_id = mysqli_fetch_array($result_id);
 			
 
-			echo $row_id[0];
-			exit();
-	
+		
 		// 이름이 없는 경우
 		if($rows_num['cnt']==0){
 ?>
@@ -50,7 +42,7 @@
 
 <?php
 
-			}else{
+			}else{ 
 ?>
 		<form method="post" action="../index.php?mode=find_id_complete" name ="frm"> 
 			<input type="hidden" name="name" value="<?php echo $row_name[0] ?>">
@@ -61,10 +53,6 @@
 		}
 	}
 ?>
-
-
-
-
 
 <script language="javascript"> 
 	document.frm.submit(); 

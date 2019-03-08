@@ -3,12 +3,7 @@
 	session_start();	
 	$conn= new mysqli('192.168.56.101','root','localhost','test');
 
-	mysqli_query($conn, "set session character_set_connection=utf8;");
-	mysqli_query($conn, "set session character_set_results=utf8;");
-	mysqli_query($conn, "set session character_set_client=utf8;");
-			if ($conn->connect_error) {
-			die($conn->connect_error);
-		}
+	include "../../db/db.php";
 	
 	$name = $_POST[name]; 
 	$id = $_POST[id]; 

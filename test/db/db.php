@@ -14,13 +14,7 @@
 		
 	$sql = mysqli_query($conn,'select * from personal_info');	
 	 
-	while($row = mysqli_fetch_array($sql)){
-	
-
-
-	}
-
-
-
+	// while($row = mysqli_fetch_array($sql)){
+	// }
 
 ?>

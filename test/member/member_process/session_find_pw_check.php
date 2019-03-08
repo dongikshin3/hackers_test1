@@ -15,13 +15,8 @@
 <?php
 		}else{
 			$conn= new mysqli('192.168.56.101','root','localhost','test');
-				mysqli_query($conn, "set session character_set_connection=utf8;");
-				mysqli_query($conn, "set session character_set_results=utf8;");
-				mysqli_query($conn, "set session character_set_client=utf8;");
+			include "../../db/db.php";
 
-			if ($conn->connect_error) {
-				die($conn->connect_error);
-			}
 
 			$query_name = "select count(*) AS cnt from personal_info where name='$name'";
 			$result=mysqli_query($conn,$query_name);

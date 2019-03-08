@@ -12,9 +12,10 @@
 	mysqli_query($conn, "set session character_set_client=utf8;");
 
 
-	if ($conn->connect_error) {
-		die($conn->connect_error);
-	}
+		if ($conn->connect_error) {
+			die($conn->connect_error);
+		}
+		
 
 	$query="select count(*) AS cnt from personal_info where id='$id'";
 	$result=mysqli_query($conn,$query);

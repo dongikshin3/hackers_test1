@@ -38,6 +38,30 @@
 							<td><input type="text" class="input-text" style="width:302px" id="input_id" name="id" placeholder="영문자로 시작하는 4~15자의 영문소문자, 숫자"/><a href="#" class="btn-s-tin ml10" id="check_id">중복확인</a></td>
 						</tr>
 
+<!--아이디 중복검사 -->
+<script>
+$('#check_id').click(function(){	 
+
+	$.ajax({
+		type: "POST",
+		url: "./member_process/check_id_overlap.php",
+		data: {
+			 "id" : $('#input_id').val()
+		},
+		dataType: 'html',
+		success: function(data) {		
+					if (data == 0) {
+						alert("사용가능한 아이디 입니다.");
+						$("input[name|='id_check_val']").prop("value",'Y');
+					} else {
+						alert("사용중인 ID입니다.");
+						$("input[name|='id_check_val']").prop("value",'N');
+					}
+				}
+	});
+});
+
+</script>
 
 						<tr>
 							<th scope="col"><span class="icons">*</span>비밀번호</th>
@@ -86,6 +110,30 @@
 								</p>
 							</td>
 						</tr>
+
+<!--다음 api-->
+<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+<script>
+		$('#address_finder').click(function () {
+			execDaumPostcode();
+		});
+
+</script>
+
+<script>
+
+	function execDaumPostcode(){
+		new daum.Postcode({
+			oncomplete: function(data){
+				$("#post_code").val(data.postcode);
+				$("#address_1").val(data.address);
+			
+			}
+		}).open();
+	}
+</script>
+
+
 						<tr>
 							<th scope="col"><span class="icons">*</span>SMS수신</th>
 							<td>
@@ -116,6 +164,30 @@
 									</label>
 								</div>
 								<p>메일수신 시, 해커스의 혜택 및 이벤트 정보를 받아보실 수 있습니다.</p>
+
+<!--sms / mail 스왑-->
+<script>
+$(document).ready(function(){
+	$("input[name|='sms_ok']").click(function(){	 
+        $("input[name|='sms_no']").prop("checked",false); 
+		$("input[name|='sms_ok']").prop("value",'Y');
+    });
+	$("input[name|='sms_no']").click(function(){	 
+        $("input[name|='sms_ok']").prop("checked",false); 
+		$("input[name|='sms_ok']").prop("value",'N');
+    });
+	$("input[name|='mail_ok']").click(function(){	 
+        $("input[name|='mail_no']").prop("checked",false); 
+		$("input[name|='mail_ok']").prop("value",'Y');
+    });
+	$("input[name|='mail_no']").click(function(){	 
+        $("input[name|='mail_ok']").prop("checked",false); 
+		$("input[name|='mail_ok']").prop("value",'N');
+    });
+});
+</script>
+
+
 							</td>
 						</tr>
 					</tbody>
@@ -130,30 +202,7 @@
 	</div>
 </div>
 
-<!--아이디 중복검사 -->
-<script>
-$('#check_id').click(function(){	 
 
-	$.ajax({
-		type: "POST",
-		url: "./member_process/check_id_overlap.php",
-		data: {
-			 "id" : $('#input_id').val()
-		},
-		dataType: 'html',
-		success: function(data) {		
-					if (data == 0) {
-						alert("사용가능한 아이디 입니다.");
-						$("input[name|='id_check_val']").prop("value",'Y');
-					} else {
-						alert("사용중인 ID입니다.");
-						$("input[name|='id_check_val']").prop("value",'N');
-					}
-				}
-	});
-});
-
-</script>
 
 <!--아이디 유효성 검사 -->
 <script>
@@ -197,49 +246,4 @@ $('#join').click(function(){
 
 </script>
 
-
-<!--sms / mail 스왑-->
-<script>
-$(document).ready(function(){
-	$("input[name|='sms_ok']").click(function(){	 
-        $("input[name|='sms_no']").prop("checked",false); 
-		$("input[name|='sms_ok']").prop("value",'Y');
-    });
-	$("input[name|='sms_no']").click(function(){	 
-        $("input[name|='sms_ok']").prop("checked",false); 
-		$("input[name|='sms_ok']").prop("value",'N');
-    });
-	$("input[name|='mail_ok']").click(function(){	 
-        $("input[name|='mail_no']").prop("checked",false); 
-		$("input[name|='mail_ok']").prop("value",'Y');
-    });
-	$("input[name|='mail_no']").click(function(){	 
-        $("input[name|='mail_ok']").prop("checked",false); 
-		$("input[name|='mail_ok']").prop("value",'N');
-    });
-});
-</script>
-
-
-<!--다음 api-->
-<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
-<script>
-		$('#address_finder').click(function () {
-			execDaumPostcode();
-		});
-
-</script>
-
-<script>
-
-	function execDaumPostcode(){
-		new daum.Postcode({
-			oncomplete: function(data){
-				$("#post_code").val(data.postcode);
-				$("#address_1").val(data.address);
-			
-			}
-		}).open();
-	}
-</script>
 
