@@ -82,32 +82,11 @@
 						$query = "select * from review where lecture_name ='$lecture_name' and lecture_type='$SC1'  LIMIT 0,20" ;
 						$result = mysqli_query($conn,$query);
 						
-						$num = "best";
+						$num = 1;
+						
+						query_show($query, $result, $num);
 
-						while($row = mysqli_fetch_row($result)){
-							echo $row[5];
-							echo "
-							<tr class='bbs-sbj'>
-								<td>".$num."
-													
-								</td> 
-								<td>".$row[4]."</td>
-								<td>
-									<a href='#'>
-										<span class='tc-gray ellipsis_line'>수강 강의명 : ".$row[0]."</span>
-										<strong class='ellipsis_line'>".$row[1]."</strong>
-									</a>
-									</td>
-								<td>
-									<span class='star-rating'>
-										<span class='star-inner' style='width:80%'></span>
-									</span>
-								</td>
-								<td class='last'>".$row[3]."</td>
-							</tr>
-							";	
-							$num++;
-						}	
+	
 
 					}else if($SC2=="WN"){
 						$writer_name = $_GET['lecture_name'];
@@ -115,31 +94,8 @@
 						$result = mysqli_query($conn,$query);
 						
 						$num =1;
-
-						while($row = mysqli_fetch_row($result)){
-
-							echo "
-							<tr class='bbs-sbj'>
-								<td>".$num."
-													
-								</td> 
-								<td>".$row[4]."</td>
-								<td>
-									<a href='#'>
-										<span class='tc-gray ellipsis_line'>수강 강의명 : ".$row[0]."</span>
-										<strong class='ellipsis_line'>".$row[1]."</strong>
-									</a>
-									</td>
-								<td>
-									<span class='star-rating'>
-										<span class='star-inner' style='width:80%'></span>
-									</span>
-								</td>
-								<td class='last'>".$row[3]."</td>
-							</tr>
-							";	
-							$num++;
-						}
+						
+						query_show($query, $result, $num);
 					}	
 				?>
 			</tbody>
@@ -165,3 +121,46 @@
 	</div>
 </div>
 
+<?php
+			function query_show($arg1, $arg2, $arg3){
+			$conn= new mysqli('192.168.56.101','root','localhost','test');
+
+			mysqli_query($conn, "set session character_set_connection=utf8;");
+			mysqli_query($conn, "set session character_set_results=utf8;");
+			mysqli_query($conn, "set session character_set_client=utf8;");
+
+
+				if ($conn->connect_error) {
+					die($conn->connect_error);
+				}
+
+				$query = $arg1 ;
+				$result = $arg2;
+				$num = $arg3;
+
+					while($row = mysqli_fetch_row($result)){
+							
+					echo "
+					<tr class='bbs-sbj'>
+						<td>".$num."
+														
+						</td> 
+						<td>".$row[4]."</td>
+						<td>
+							<a href='#'>
+								<span class='tc-gray ellipsis_line'>수강 강의명 : ".$row[0]."</span>
+								<strong class='ellipsis_line'>".$row[1]."</strong>
+							</a>
+							</td>
+						<td>
+							<span class='star-rating'>
+								<span class='star-inner' style='width:80%'></span>
+							</span>
+						</td>
+						<td class='last'>".$row[3]."</td>
+					</tr>
+					";	
+					$num++;
+					}		
+			}
+?>
