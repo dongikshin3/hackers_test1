@@ -108,7 +108,7 @@
 						<li class="mnu5">
 							<a href="#">직무교육 안내</a>
 							<ul class="nav-sub-lst">
-								<li><a href="#">서브메뉴</a></li>
+								<li><a href="/lecture_board/index.php">수강후기</a></li>
 								<li><a href="#">서브메뉴</a></li>
 								<li><a href="#">서브메뉴</a></li>
 								<li><a href="#">서브메뉴</a></li>
@@ -147,16 +147,13 @@
 			<div class="inner">
 				
 					<div class="link-box">
-						<!-- 로그인전 -->
+						<!-- 로그인후 -->
 					<form action="./index.php" method="post">
 						<input type="hidden" value="1" name="logout_key">
-						<a href="./member/member_process/logout.php" type="submit" id="logout" >로그아웃</a>
-						<a href="./member/index.php?mode=modify" type="submit">내정보 수정</a>
+						<a href="/member/member_process/logout.php" type="submit" id="logout" >로그아웃</a>
+						<a href="/member/index.php?mode=modify" type="submit">내정보</a>
 						<a href="#">상담/고객센터</a>
-						<!-- 로그인후 -->
-						<!-- <a href="#">로그아웃</a>
-						<a href="#">내정보</a>
-						<a href="#">상담/고객센터</a> -->
+
 					</form>
 					</div>
 

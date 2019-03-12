@@ -16,7 +16,7 @@
 			die($conn->connect_error);
 		}
 		
-
+	
 	$query="select count(*) AS cnt from personal_info where id='$id'";
 	$result=mysqli_query($conn,$query);
     $rows_num=mysqli_fetch_array($result);
@@ -24,12 +24,7 @@
 
 	// 아이디가 없는 경우
 	if($rows_num['cnt']==0){
-?>
-		<form method="post" action="../index.php?mode=login" name ="frm"> 
-			<input type="hidden" name="error_check" value="Y"> 
-		</form>
-
-<?php
+		$form_error_check_val="Y";
 	}else{
 		$query_pw = "select pw from personal_info where id='$id'";
 		$result_pw = mysqli_query($conn,$query_pw);
@@ -39,11 +34,9 @@
 		
 			
 		if($row_pw[0]!=$password_hash){
-?>
-	<form method="post" action="../index.php?mode=login" name ="frm"> 
-		<input type="hidden" name="error_check" value="T"> 
-	</form>
-<?php
+
+			$form_error_check_val="T";
+
 		}else{
 			$_SESSION['is_logged'] = 'YES';
 			$_SESSION['id'] = $id;
@@ -62,6 +55,9 @@
 
 
 
+<form method="post" action="../index.php?mode=login" name ="frm"> 
+		<input type="hidden" name="error_check" value="<?=$form_error_check_val ?>"> 
+</form>
 
 <script language="javascript"> 
 	document.frm.submit(); 

@@ -1,6 +1,6 @@
 
 <?php
-
+	
 	$conn= new mysqli('192.168.56.101','root','localhost','test');
 
 	mysqli_query($conn, "set session character_set_connection=utf8;");

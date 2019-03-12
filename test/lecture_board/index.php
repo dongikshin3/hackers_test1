@@ -1,12 +1,13 @@
 <?php 
-// 맴버 인덱스
+// 수강후기 인덱스
 header("Content-Type:text/html;charset=utf-8");
 	$mode = $_GET['mode'];
 	if(empty($mode)) {
-		$mode = 'step1';
+		$mode = 'list';
 	}
 
 ?>
+
 
 <?php
 	session_start();
@@ -15,20 +16,21 @@ header("Content-Type:text/html;charset=utf-8");
 
 	if($_SESSION['is_logged']=='YES'){
 		include "../view/header2.php";
+		include "lecture_board_view/".$mode.".html";
 		include "member_view/".$mode.".html";
 		include "../view/footer.php";
 	}
-	else if($mode=='login'){
-		include "member_view/".$mode.".html";
-	}
 	else{
 		include "../view/header.php";
+		include "lecture_board_view/".$mode.".html";
 		include "member_view/".$mode.".html";
 		include "../view/footer.php";
 	}
 		
 
 ?>
+?>
+
 
 
 

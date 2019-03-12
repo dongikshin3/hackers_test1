@@ -1,0 +1,15 @@
+<?php
+		header('Content-Type:text/html;charset=utf-8');
+
+		include "../../db/db.php";
+		$delete_lecture = $_GET['delete_lecture'];
+		
+		$query = "DELETE FROM test.lecture where lecture_name='$delete_lecture'";
+		echo "<meta http-equiv='refresh' content='0; url=../index.php'>";
+		 
+		mysqli_query($conn,$query);
+
+
+
+
+?>
