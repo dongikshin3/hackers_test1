@@ -1,7 +1,9 @@
+
 <div id="container" class="container">
 	<?php
 		include "../view/lnb.php";
 	?>
+
 	<div id="content" class="content">
 		<div class="tit-box-h3">
 			<h3 class="tit-h3">수강후기</h3>
@@ -31,12 +33,17 @@
 				<tr>
 					<th scope="col">강의</th>
 					<td>
-						<select class="input-sel" style="width:160px">
-							<option value="">분류</option>
+						<select class="input-sel" style="width:158px" name ="SC1" >
+							<option value="0">분류</option>
+							<option value="1">1 : 일반직무</option>
+							<option value="2">2 : 산업직무</option>
+							<option value="3">3 : 공통역량</option>
+							<option value="4">1 : 어학 및 자격증</option>
 						</select>
-						<select class="input-sel ml5" style="width:454px">
-							<option value="">강의명</option>
-						</select>
+						<?php
+							query_show();
+						?>
+
 					</td>
 				</tr>
 				<tr>
@@ -99,7 +106,28 @@
 		</table>
 
 		<div class="editor-wrap">
-			에디터영역
+		
+			
+			<script src="https://code.jquery.com/jquery-1.12.4.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+function saveContent() {
+    if(jQuery("#title").val() == "") {
+        alert("제목을 입력해 주세요.");
+        jQuery("#title").focus();
+        return;
+    }
+
+    Editor.save(); // 이 함수를 호출하여 글을 등록하면 된다.
+}
+</script>
+
+			<?php	
+			include_once ("./lecture_board_view/daumEditor/editor.html"); 
+
+			?>
+
+
+			
 		</div>
 	
 		<div class="box-btn t-r">
@@ -112,3 +140,31 @@
 	</div>
 </div>
 
+
+<?php
+	// 쿼리 입력 함수
+			function query_show(){
+			
+			$conn= new mysqli('192.168.56.101','root','localhost','test');
+
+			mysqli_query($conn, "set session character_set_connection=utf8;");
+			mysqli_query($conn, "set session character_set_results=utf8;");
+			mysqli_query($conn, "set session character_set_client=utf8;");
+
+				if ($conn->connect_error) {
+					die($conn->connect_error);
+				}
+
+				$query = "select lecture_name from lecture" ;
+				$result = mysqli_query($conn,$query);
+				
+				echo "<select class='input-sel ml5' style='width:454px'>";
+					
+				while($row = mysqli_fetch_row($result)){
+						echo "<option>".$row[0]."</option>";	
+					
+				}
+				echo "</select>";
+						
+			}
+?>

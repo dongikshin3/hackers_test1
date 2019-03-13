@@ -36,7 +36,8 @@
 						<option value="WN">작성자</option>
 					</select>
 				
-					<input type="hidden" name="mode" value="list_searched"/>
+					<input type="hidden" name="mode" value="list"/>
+					<input type="hidden" name="key" value="searched"/>
 					<input type="text" class="input-text" placeholder="강의명을 입력하세요." name="lecture_name" style="width:158px"/>
 					<button type="submit" class="btn-s-dark">검색</button>
 				</form>
@@ -66,45 +67,150 @@
 			<tbody>
 				
 				<?php
-					// 첫페이지 best 3
-					$query = "select * from review ORDER BY satisfacion DESC LIMIT 0,3" ;
-					$result = mysqli_query($conn,$query);
-					$num = "best";
-					
-					query_show($query, $result, $num);
-					
-					// 첫페이지 17개
-					$query2 = "select * from review ORDER BY satisfacion DESC LIMIT 3,17" ;
-					$result = mysqli_query($conn,$query2);
-					$num = 4;
+					//
+					$query_all = 'select count(*) as cnt from review ';
+					$result_all = mysqli_query($conn,$query_all);
+					$row_all = mysqli_fetch_row($result_all);
 
-					query_show($query2, $result, $num);
+					$allPage = ceil($row_all[0]/20); // 전체 페이지 갯수
+					$oneSection = 6; // 색션 기준
+					$allSection = ceil($allPage / $oneSection); // 전체 색션 수
+
+					
+						$currentSection = $_GET['currentSection']; //현재 섹션 
+						if(empty($currentSection)) {
+						$currentSection = 1;
+					}
+					
+					//키값 호출 
+					$key = $_GET['key'];
+					$page = $_GET['page'];
+
+					if(empty($key)) {
+						$key = 1;
+					}
+					if(empty($page)) {
+						$page = 1;
+					}
+					
+					// 예외처리
+					if($page<=0){
+						echo("<script>location.href='index.php';</script>"); 
+						
+					}
+					if($allSection<$currentSection && $allPage!= 0){
+						$page= $allPage-1;
+						$currentSection = $currentSection-1;
+						 echo "<script>alert(\"마지막 페이지입니다\");</script>";
+					}
+					if($page>=$allPage){
+						$page= $allPage-1;
+						echo "<script>alert(\"마지막 페이지입니다\");</script>";
+					}
+
+					$firstPage = ($currentSection * $oneSection) - ($oneSection - 1);
+					$firstReview = $page * 20; 
+
+					if($page==1 && $key!="searched"){
+						$key = 1;
+					}
+					
+					// 페이지 스위칭		
+					switch ($key) {
+						case 1  : 
+							$query = "select * from review ORDER BY satisfacion DESC LIMIT 0,3" ;
+							$result = mysqli_query($conn,$query);
+							$num = "best";
+							
+							query_show($query, $result, $num);
+							
+							$query2 = "select * from review ORDER BY satisfacion DESC LIMIT 3,17" ;
+							$result = mysqli_query($conn,$query2);
+							$num = 4;
+
+							query_show($query2, $result, $num);
+						break;
+
+						case 2  : 
+							$query = "select * from review LIMIT $firstReview,20" ;
+							$result = mysqli_query($conn,$query);
+							$num = 1;
+
+							query_show($query2, $result, $num);
+						break;
+
+						case searched  : 
+							
+							$SC1 = $_GET['SC1'];
+							$SC2 = $_GET['SC2'];
+							$lecture_name = $_GET['lecture_name'];
+							
+							// 분류가 없으면 분류 할당
+							if(SC1==0){
+								$query = "select lecture_type from review where lecture_name ='$lecture_name'" ;
+								$result = mysqli_query($conn,$query);
+								$row = mysqli_fetch_row($result);
+								$SC1 = $row[0];
+								
+							}
+							// 강의명 서치
+							if($SC2=="CN"){
+								$lecture_name = $_GET['lecture_name'];
+								$query = "select * from review where lecture_name ='$lecture_name' and lecture_type='$SC1'  LIMIT 0,20" ;
+								$result = mysqli_query($conn,$query);
+								
+								$num = 1;
+								
+								query_show($query, $result, $num);
+							// 작성자 서치
+							}else if($SC2=="WN"){
+								$writer_name = $_GET['lecture_name'];
+								$query = "select * from review where writer ='$writer_name' LIMIT 0,20" ;
+								$result = mysqli_query($conn,$query);
+								
+								$num =1;			
+								query_show($query, $result, $num);
+							}
+						break;
+						}
 				?>
 			</tbody>
 
 		</table>
 
 		<div class="box-paging">
-			<a href="#"><i class="icon-first"><span class="hidden">첫페이지</span></i></a>
-			<a href="#"><i class="icon-prev"><span class="hidden">이전페이지</span></i></a>
-			<a href="#" class="active">1</a>
-			<a href="#">2</a>
-			<a href="#">3</a>
-			<a href="#">4</a>
-			<a href="#">5</a>
-			<a href="#">6</a>
-			<a href="#"><i class="icon-next"><span class="hidden">다음페이지</span></i></a>
-			<a href="#"><i class="icon-last"><span class="hidden">마지막페이지</span></i></a>
+			<a href="index.php"><i class="icon-first"><span class="hidden">첫페이지</span></i></a>
+			<a href="index.php?key=2&page=<?=$firstPage-6?>&currentSection=<?=$currentSection-1?>" class="previous_page"><i class="icon-prev"><span class="hidden">이전페이지</span></i></a>
+			<a href="index.php?key=2&page=<?=$firstPage?>&currentSection=<?=$currentSection?>" class="non_active"><?=$firstPage?></a>
+			<a href="index.php?key=2&page=<?=$firstPage+1?>&currentSection=<?=$currentSection?>" class="non_active"><?=$firstPage+1?></a>
+			<a href="index.php?key=2&page=<?=$firstPage+2?>&currentSection=<?=$currentSection?>" class="non_active"><?=$firstPage+2?></a>
+			<a href="index.php?key=2&page=<?=$firstPage+3?>&currentSection=<?=$currentSection?>" class="non_active"><?=$firstPage+3?></a>
+			<a href="index.php?key=2&page=<?=$firstPage+4?>&currentSection=<?=$currentSection?>" class="non_active"><?=$firstPage+4?></a>
+			<a href="index.php?key=2&page=<?=$firstPage+5?>&currentSection=<?=$currentSection?>" class="non_active"><?=$firstPage+5?></a>
+			<a href="index.php?key=2&page=<?=$firstPage+6?>&currentSection=<?=$currentSection+1?>" class="next_page" ><i class="icon-next"><span class="hidden">다음페이지</span></i></a>
+			<a href="index.php?key=2&page=<?=$allPage-1?>&currentSection=<?=$allSection?>"><i class="icon-last"><span class="hidden">마지막페이지</span></i></a>
 		</div>
 
+<script>
+	var search = jQuery(location).attr('search');
+		if(search==""){
+			$('a[href="index.php?key=2&page=<?=$firstPage?>&currentSection=<?=$currentSection?>').attr('class','active');
+		}else{
+			$('a[href="index.php?key=2&page=<?=$page?>&currentSection=<?=$currentSection?>"]').attr('class','active');
+		}
+		
+	
+</script>
+
 		<div class="box-btn t-r">
-			<a href="#" class="btn-m">후기 작성</a>
+			<a href="index.php?mode=write" class="btn-m">후기 작성</a>
 		</div>
 	</div>
 </div>
 
 
 <?php
+	// 쿼리 입력 함수
 			function query_show($arg1, $arg2, $arg3){
 			$conn= new mysqli('192.168.56.101','root','localhost','test');
 
@@ -143,7 +249,7 @@
 						<td class='last'>".$row[3]."</td>
 					</tr>
 					";	
-					$num++;
+					if($num!="best")$num++;
 					}		
 			}
 ?>

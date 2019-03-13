@@ -13,6 +13,7 @@ header("Content-Type:text/html;charset=utf-8");
 	session_start();
 	
 	include "../db/db.php";
+	
 
 	if($_SESSION['is_logged']=='YES'){
 		include "../view/header2.php";

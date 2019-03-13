@@ -10,9 +10,11 @@
 	$ext = substr($name, strrpos($name, '.') + 1); 
 	$form_error_check_val = "EN";
 
+
 	
 	// 섬네일 변경하지 않음
 	if(!in_array($ext, $allowed_ext) && $name == ""){
+		
 		$lecture_name =  $_POST['lecture_name'];
 		$teacher_name =  $_POST['teacher_name'];
 		$lecture_level =  $_POST['lecture_level'];
