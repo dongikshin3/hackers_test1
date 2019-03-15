@@ -1,0 +1,28 @@
+<?php
+		header('Content-Type:text/html;charset=utf-8');
+		
+		include "../../db/db.php";
+		$writer=$_GET['writer'];
+		$lecture_name=$_GET['lecture_name'];
+		$review=$_GET['review'];
+
+
+		if($_SESSION['is_logged']!='YES'){
+		echo "<script>alert('로그인 후 이용 가능합니다.');</script>";
+		echo "<meta http-equiv='refresh' content='0; url=./index.php?mode=list'>";
+		exit();
+		}else if($writer!=$_SESSION['id']){
+			echo "<script>alert('본인만 수정할 수 있습니다.');</script>";
+			echo "<meta http-equiv='refresh' content='0; url=./index.php?mode=list'>";
+			exit();
+		}else{
+			$query = "DELETE FROM test.review where review='$review'";
+			$result = mysqli_query($conn,$query);
+			$row = mysqli_fetch_row($result);
+			echo "<meta http-equiv='refresh' content='0; url=./index.php'>";
+		
+		}	
+
+
+
+?>

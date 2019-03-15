@@ -99,21 +99,35 @@
 						
 					}
 					if($allSection<$currentSection && $allPage!= 0){
+						echo "<script>alert(\"마지막 페이지입니다\");</script>";
 						$page= $allPage-1;
 						$currentSection = $currentSection-1;
-						 echo "<script>alert(\"마지막 페이지입니다\");</script>";
+						 
+						 if($page==0){
+							$page = $page +1;
+						}
 					}
+					
 					if($page>=$allPage){
+						if($page!=$allPage){
+								echo "<script>alert(\"마지막 페이지입니다\");</script>";
+							}
+						
 						$page= $allPage-1;
-						echo "<script>alert(\"마지막 페이지입니다\");</script>";
+						if($page==0){
+							$page = $page +1;
+						}
 					}
+					
+					
 
 					$firstPage = ($currentSection * $oneSection) - ($oneSection - 1);
 					$firstReview = $page * 20; 
-
+					
 					if($page==1 && $key!="searched"){
-						$key = 1;
+						$key = 1;					
 					}
+				
 					
 					// 페이지 스위칭		
 					switch ($key) {
@@ -124,7 +138,7 @@
 							
 							query_show($query, $result, $num);
 							
-							$query2 = "select * from review ORDER BY satisfacion DESC LIMIT 3,17" ;
+							$query2 = "select * from review ORDER BY review_date DESC LIMIT 0,17" ;
 							$result = mysqli_query($conn,$query2);
 							$num = 4;
 
@@ -132,7 +146,7 @@
 						break;
 
 						case 2  : 
-							$query = "select * from review LIMIT $firstReview,20" ;
+							$query = "select * from review ORDER BY review_date DESC LIMIT $firstReview,20" ;
 							$result = mysqli_query($conn,$query);
 							$num = 1;
 
@@ -202,6 +216,7 @@
 	
 </script>
 
+
 		<div class="box-btn t-r">
 			<a href="index.php?mode=write" class="btn-m">후기 작성</a>
 		</div>
@@ -228,7 +243,8 @@
 				$num = $arg3;
 
 					while($row = mysqli_fetch_row($result)){
-							
+					$s_point = $row[2]*20;	
+					
 					echo "
 					<tr class='bbs-sbj'>
 						<td>".$num."
@@ -236,14 +252,14 @@
 						</td> 
 						<td>".$row[4]."</td>
 						<td>
-							<a href='#'>
+							<a href='index.php?mode=view&review_title=".$row[1]."'>
 								<span class='tc-gray ellipsis_line'>수강 강의명 : ".$row[0]."</span>
 								<strong class='ellipsis_line'>".$row[1]."</strong>
 							</a>
 							</td>
 						<td>
 							<span class='star-rating'>
-								<span class='star-inner' style='width:80%'></span>
+								<span class='star-inner' style='width:".$s_point."%'></span>
 							</span>
 						</td>
 						<td class='last'>".$row[3]."</td>

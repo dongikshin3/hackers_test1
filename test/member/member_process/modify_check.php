@@ -52,7 +52,7 @@
 	}
 	else if($pw1 !=$pw2){
 		echo "비밀번호가 일치하지 않습니다 ";
-	}
+	} // 등록
 	else{	
 		echo 1;
 		$password_hash = hash("sha256", $pw1);

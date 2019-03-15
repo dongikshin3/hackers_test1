@@ -28,6 +28,7 @@
 <script type="text/javascript" src="http://q.hackershrd.com/worksheet/js/plugins/bxslider/jquery.bxslider.min.js"></script>
 <script type="text/javascript" src="http://q.hackershrd.com/worksheet/js/plugins/bxslider/bxslider.js"></script>
 <script type="text/javascript" src="http://q.hackershrd.com/worksheet/js/ui.js"></script>
+<script type="text/javascript" src="./nse_files/js/HuskyEZCreator.js" charset="utf-8"></script>
 <!--[if lte IE 9]> <script src="/js/common/place_holder.js"></script> <![endif]-->
 
 </head>

@@ -1,0 +1,331 @@
+<div id="container" class="container">
+	<?php
+		include "../view/lnb.php";
+	?>
+
+	<?php
+		$review_title = $_GET['review_title'];
+		$query = "select * from review where review_title ='$review_title'" ;
+		$result = mysqli_query($conn,$query);
+		$row = mysqli_fetch_row($result);
+		$s_point=$row[2]*20;
+
+		$query2 = "select * from lecture where lecture_name ='$row[0]'" ;
+		$result2 = mysqli_query($conn,$query2);
+		$row2 = mysqli_fetch_row($result2);
+
+
+		switch ( $row2[3]){
+		  case 1:
+			$level="하";
+			break;
+		  case 2:
+			$level="중";
+			break;
+		  case 3:
+			statement2;
+			$level="상";
+
+		}
+
+		
+
+	?>
+
+	<div id="content" class="content">
+		<div class="tit-box-h3">
+			<h3 class="tit-h3">수강후기</h3>
+			<div class="sub-depth">
+				<span><i class="icon-home"><span>홈</span></i></span>
+				<span>직무교육 안내</span>
+				<strong>수강후기</strong>
+			</div>
+		</div>
+
+		<table border="0" cellpadding="0" cellspacing="0" class="tbl-bbs-view">
+			<caption class="hidden">수강후기</caption>
+			<colgroup>
+				<col style="*"/>
+				<col style="width:20%"/>
+			</colgroup>
+			<tbody>
+				 <tr>
+					<th scope="col">제목 : <?=$row[1]?></th>
+					<th scope="col" class="user-id">작성자 | <?=$row[3]?></th>
+				 </tr>
+				<tr>
+					<td colspan="2">
+						<div class="box-rating">
+							<span class="tit_rating">강의만족도</span>
+							<span class="star-rating">
+								<span class="star-inner" style="width:<?=$s_point?>%"></span>
+							</span>
+						</div>	
+						<?=$row[5]?>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		
+		
+		<p class="mb15"><strong class="tc-brand fs16"><?=$row[3]?> 님의 수강하신 강의 정보</strong></p>
+		
+		<table border="0" cellpadding="0" cellspacing="0" class="tbl-lecture-list">
+			<caption class="hidden">강의정보</caption>
+			<colgroup>
+				<col style="width:166px"/>
+				<col style="*"/>
+				<col style="width:110px"/>
+			</colgroup>
+			<tbody>
+				<tr>
+					<td>
+						<a href="#" class="sample-lecture">
+							<img src="Koala.jpg" alt="" width="144" height="101" />
+							<span class="tc-brand">샘플강의 ▶</span>
+						</a>
+					</td>
+					<td class="lecture-txt">
+						<em class="tit mt10"><?=$row2[1]?></em>
+						<p class="tc-gray mt20">강사: <?=$row2[2]?> | 학습난이도 : <?=$level?> | 교육시간: <?=$row2[4]?>시간 (<?=$row2[4]?>강)</p>
+					</td>
+					<td class="t-r"><a href="#" class="btn-square-line">강의<br />상세</a></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<div class="box-btn t-r">
+			<a href="#" class="btn-m-gray">목록</a>
+			<a href="./index.php?mode=update&writer=<?=$row[3]?>&lecture_name=<?=$row[0]?>&review=<?=$row[5]?>" class="btn-m ml5">수정</a>
+			<a href="./index.php?mode=delete&writer=<?=$row[3]?>&lecture_name=<?=$row[0]?>&review=<?=$row[5]?>" class="btn-m-dark">삭제</a>
+		</div>
+
+		<div class="search-info">
+			<div class="search-form f-r">
+				<select class="input-sel" style="width:158px">
+					<option value="">분류</option>
+				</select>
+				<select class="input-sel" style="width:158px">
+					<option value="">강의명</option>
+					<option value="">작성자</option>
+				</select>
+				<input type="text" class="input-text" placeholder="강의명을 입력하세요." style="width:158px"/>
+				<button type="button" class="btn-s-dark">검색</button>
+			</div>
+		</div>
+
+		<table border="0" cellpadding="0" cellspacing="0" class="tbl-bbs">
+			<caption class="hidden">수강후기</caption>
+			<colgroup>
+				<col style="width:8%"/>
+				<col style="width:8%"/>
+				<col style="*"/>
+				<col style="width:15%"/>
+				<col style="width:12%"/>
+			</colgroup>
+
+			<thead>
+				<tr>
+					<th scope="col">번호</th>
+					<th scope="col">분류</th>
+					<th scope="col">제목</th>
+					<th scope="col">강의만족도</th>
+					<th scope="col">작성자</th>
+				</tr>
+			</thead>
+	 
+			<tbody>
+					
+				<?php
+					//
+					$query_all = 'select count(*) as cnt from review ';
+					$result_all = mysqli_query($conn,$query_all);
+					$row_all = mysqli_fetch_row($result_all);
+
+					$allPage = ceil($row_all[0]/10); // 전체 페이지 갯수
+					$oneSection = 6; // 색션 기준
+					$allSection = ceil($allPage / $oneSection); // 전체 색션 수
+
+					
+						$currentSection = $_GET['currentSection']; //현재 섹션 
+						if(empty($currentSection)) {
+						$currentSection = 1;
+					}
+					
+					//키값 호출 
+					$key = $_GET['key'];
+					$page = $_GET['page'];
+
+					if(empty($key)) {
+						$key = 1;
+					}
+					if(empty($page)) {
+						$page = 1;
+					}
+					
+					// 예외처리
+					if($page<=0){
+						echo("<script>location.href='index.php';</script>"); 
+						
+					}
+					if($allSection<$currentSection && $allPage!= 0){
+						$page= $allPage-1;
+						$currentSection = $currentSection-1;
+						 echo "<script>alert(\"마지막 페이지입니다\");</script>";
+					}
+					if($page>=$allPage){
+						if($page!=$allPage){
+								echo "<script>alert(\"마지막 페이지입니다\");</script>";
+							}
+						$page= $allPage-1;
+					}
+				
+
+					$firstPage = ($currentSection * $oneSection) - ($oneSection - 1);
+					$firstReview = $page * 5; 
+
+					if($page==1 && $key!="searched"){
+						$key = 1;
+					}
+					
+					
+					// 페이지 스위칭		
+					switch ($key) {
+						case 1  : 
+							$query = "select * from review ORDER BY satisfacion DESC LIMIT 0,3" ;
+							$result = mysqli_query($conn,$query);
+							$num = "best";
+							
+							query_show($query, $result, $num);
+							
+							$query2 = "select * from review ORDER BY satisfacion DESC LIMIT 0,2" ;
+							$result = mysqli_query($conn,$query2);
+							$num = 4;
+
+							query_show($query2, $result, $num);
+						break;
+
+						case 2  : 
+							$query = "select * from review LIMIT $firstReview,5" ;
+							$result = mysqli_query($conn,$query);
+							$num = 1;
+
+							query_show($query2, $result, $num);
+						break;
+
+						case searched  : 
+							
+							$SC1 = $_GET['SC1'];
+							$SC2 = $_GET['SC2'];
+							$lecture_name = $_GET['lecture_name'];
+							
+							// 분류가 없으면 분류 할당
+							if(SC1==0){
+								$query = "select lecture_type from review where lecture_name ='$lecture_name'" ;
+								$result = mysqli_query($conn,$query);
+								$row = mysqli_fetch_row($result);
+								$SC1 = $row[0];
+								
+							}
+							// 강의명 서치
+							if($SC2=="CN"){
+								$lecture_name = $_GET['lecture_name'];
+								$query = "select * from review where lecture_name ='$lecture_name' and lecture_type='$SC1'  LIMIT 0,5" ;
+								$result = mysqli_query($conn,$query);
+								
+								$num = 1;
+								
+								query_show($query, $result, $num);
+							// 작성자 서치
+							}else if($SC2=="WN"){
+								$writer_name = $_GET['lecture_name'];
+								$query = "select * from review where writer ='$writer_name' LIMIT 0,5" ;
+								$result = mysqli_query($conn,$query);
+								
+								$num =1;			
+								query_show($query, $result, $num);
+							}
+						break;
+						}
+				?>
+			</tbody>
+		</table>
+
+		<div class="box-paging">
+			<a href="index.php?mode=view&review_title=<?=$row[1]?>"><i class="icon-first"><span class="hidden">첫페이지</span></i></a>
+			<a href="index.php?mode=view&review_title=<?=$row[1]?>&key=2&page=<?=$firstPage-6?>&currentSection=<?=$currentSection-1?>" class="previous_page"><i class="icon-prev"><span class="hidden">이전페이지</span></i></a>
+			<a href="index.php?mode=view&review_title=<?=$row[1]?>&key=2&page=<?=$firstPage?>&currentSection=<?=$currentSection?>" class="non_active"><?=$firstPage?></a>
+			<a href="index.php?mode=view&review_title=<?=$row[1]?>&key=2&page=<?=$firstPage+1?>&currentSection=<?=$currentSection?>" class="non_active"><?=$firstPage+1?></a>
+			<a href="index.php?mode=view&review_title=<?=$row[1]?>&key=2&page=<?=$firstPage+2?>&currentSection=<?=$currentSection?>" class="non_active"><?=$firstPage+2?></a>
+			<a href="index.php?mode=view&review_title=<?=$row[1]?>&key=2&page=<?=$firstPage+3?>&currentSection=<?=$currentSection?>" class="non_active"><?=$firstPage+3?></a>
+			<a href="index.php?mode=view&review_title=<?=$row[1]?>&key=2&page=<?=$firstPage+4?>&currentSection=<?=$currentSection?>" class="non_active"><?=$firstPage+4?></a>
+			<a href="index.php?mode=view&review_title=<?=$row[1]?>&key=2&page=<?=$firstPage+5?>&currentSection=<?=$currentSection?>" class="non_active"><?=$firstPage+5?></a>
+			<a href="index.php?mode=view&review_title=<?=$row[1]?>&key=2&page=<?=$firstPage+6?>&currentSection=<?=$currentSection+1?>" class="next_page" ><i class="icon-next"><span class="hidden">다음페이지</span></i></a>
+			<a href="index.php?key=2&page=<?=$allPage-1?>&currentSection=<?=$allSection?>"><i class="icon-last"><span class="hidden">마지막페이지</span></i></a>
+		</div>
+	</div>
+</div>
+
+<script>
+	var search = jQuery(location).attr('search');
+		if(search==""){
+			$('a[href="index.php?mode=view&review_title=<?=$row[1]?>&key=2&page=<?=$firstPage?>&currentSection=<?=$currentSection?>').attr('class','active');
+		}else{
+			$('a[href="index.php?mode=view&review_title=<?=$row[1]?>&key=2&page=<?=$page?>&currentSection=<?=$currentSection?>"]').attr('class','active');
+		}
+		
+	
+</script>
+
+
+	
+</body>
+</html>
+
+
+
+<?php
+	// 쿼리 입력 함수
+			function query_show($arg1, $arg2, $arg3){
+			$conn= new mysqli('192.168.56.101','root','localhost','test');
+
+			mysqli_query($conn, "set session character_set_connection=utf8;");
+			mysqli_query($conn, "set session character_set_results=utf8;");
+			mysqli_query($conn, "set session character_set_client=utf8;");
+
+
+				if ($conn->connect_error) {
+					die($conn->connect_error);
+				}
+
+				$query = $arg1 ;
+				$result = $arg2;
+				$num = $arg3;
+
+					while($row = mysqli_fetch_row($result)){
+					$s_point = $row[2]*20;	
+					
+					echo "
+					<tr class='bbs-sbj'>
+						<td>".$num."
+														
+						</td> 
+						<td>".$row[4]."</td>
+						<td>
+							<a href='index.php?mode=view&review_title=".$row[1]."'>
+								<span class='tc-gray ellipsis_line'>수강 강의명 : ".$row[0]."</span>
+								<strong class='ellipsis_line'>".$row[1]."</strong>
+							</a>
+							</td>
+						<td>
+							<span class='star-rating'>
+								<span class='star-inner' style='width:".$s_point."%'></span>
+							</span>
+						</td>
+						<td class='last'>".$row[3]."</td>
+					</tr>
+					";	
+					if($num!="best")$num++;
+					}		
+			}
+?>

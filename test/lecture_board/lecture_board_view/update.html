@@ -1,11 +1,32 @@
 <?php
 	session_start();
-			if($_SESSION['is_logged']!='YES'){
-			echo "<script>alert('로그인 후 이용 가능합니다.');</script>";
+	$writer=$_GET['writer'];
+	$_SESSION['id'];
+	$lecture_name=$_GET['lecture_name'];
+	$review=$_GET['review'];
+	
+
+	$query_review = "select review from review where review='$review'";
+	$result_review = mysqli_query($conn,$query_review);
+	$row_review = mysqli_fetch_row($result_review);
+
+	$_SESSION['lecture_tmp_review'] = $row_review[0];
+
+		if($_SESSION['is_logged']!='YES'){
+		echo "<script>alert('로그인 후 이용 가능합니다.');</script>";
+		echo "<meta http-equiv='refresh' content='0; url=./index.php?mode=list'>";
+		exit();
+		}else if($writer!=$_SESSION['id']){
+			echo "<script>alert('본인만 수정할 수 있습니다.');</script>";
 			echo "<meta http-equiv='refresh' content='0; url=./index.php?mode=list'>";
 			exit();
-		}
-
+		}else{
+			$query = "select * from review where writer='$writer' and lecture_name='$lecture_name' and review='$review'";
+			$result = mysqli_query($conn,$query);
+			$row = mysqli_fetch_row($result);
+		
+		}	
+	
 ?>
 
 <div id="container" class="container">
@@ -31,7 +52,7 @@
 				<li>욕설(욕설을 표현하는 자음어/기호표현 포함) 및 명예훼손, 비방,도배글, 상업적 목적의 홍보성 게시글 등 사회상규에 반하는 게시글 및 강의내용과 상관없는 서비스에 대해 작성한 글들은 삭제 될 수 있으며, 법적 책임을 질 수 있습니다.</li>
 			</ul>
 		</div>
-		<form name="nse" action="lecture_process/write_process.php" method="post">
+		<form name="nse" action="lecture_process/update_process.php" method="post">
 		<input type="hidden" name="error_check" value="<?php echo $_GET['error_check']?>"/>
 		<table border="0" cellpadding="0" cellspacing="0" class="tbl-col">
 			<caption class="hidden">강의정보</caption>
@@ -60,7 +81,7 @@
 				</tr>
 				<tr>
 					<th scope="col">제목</th>
-					<td><input type="text" class="input-text" name="title" style="width:611px"/></td>
+					<td><input type="text" class="input-text" name="title" style="width:611px" value="<?=$row[1]?>"/></td>
 				</tr>
 				<tr>
 					<th scope="col">강의만족도</th>
@@ -123,7 +144,7 @@
 			.nse_content{width:760px;height:300px}
 			</style>
 				
-				<textarea name="ir1" id="ir1" class="nse_content"></textarea>
+				<textarea name="ir1" id="ir1" class="nse_content"><?=$row[5]?></textarea>
 				<script type="text/javascript" charset="utf-8">
 					var oEditors = [];
 					nhn.husky.EZCreator.createInIFrame({
@@ -147,12 +168,14 @@
 				<div class="box-btn t-r">
 					<a href="#" class="btn-m-gray">목록</a>
 			
-					<input type="submit" value="저장" class="btn-m ml5" onclick="submitContents(this)" />
+					<input type="submit" value="수정" class="btn-m ml5" onclick="submitContents(this)" />
 				</div>
 			</form>
 		</div>
 	</div>
 </div>
+
+
 
 <!--애러 띄우기-->
 <script>
@@ -171,7 +194,7 @@ $(document).ready(function(){
 <?php
 	// 쿼리 입력 함수
 			function query_show(){
-			
+			$lecture_name = $_GET['lecture_name'];
 			$conn= new mysqli('192.168.56.101','root','localhost','test');
 
 			mysqli_query($conn, "set session character_set_connection=utf8;");
@@ -186,9 +209,14 @@ $(document).ready(function(){
 				$result = mysqli_query($conn,$query);
 				
 				echo "<select class='input-sel ml5' name='lecture' style='width:454px'>";
-					
+				
 				while($row = mysqli_fetch_row($result)){
-						echo "<option name='lecture' value='$row[0]'>".$row[0]."</option>";	
+						if($row[0] == $lecture_name){
+							echo "<option name='lecture' selected ='selected' value='$row[0]'>".$row[0]."</option>";
+						}else{
+							echo "<option name='lecture' value='$row[0]'>".$row[0]."</option>";
+						}	
+							
 				}
 				echo "</select>";
 						

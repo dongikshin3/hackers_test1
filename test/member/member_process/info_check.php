@@ -82,7 +82,7 @@
 	else if($key=='C' || $key=='N'){
 		echo "아이디 중복확인을 해주세요 ";
 	}
-
+	// 등록
 	else{
 		
 		$password_hash = hash("sha256", $pw);
